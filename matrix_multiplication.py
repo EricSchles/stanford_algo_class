@@ -1,162 +1,103 @@
-from collections import namedtuple
-Point = namedtuple('Point','x,y,value')
 class Matrix:
     def __init__(self,matrix):
-        self.matrix = []
-        for ind_row,row in enumerate(matrix):
-            for ind_col,elem in enumerate(row):
-                self.matrix.append(Point(ind_row,ind_col,elem))
-        
-    def from_matrix_to_array(self,elems):
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])
-        arr = []
-        for row in range(start_row,end_row+1):
-            tmp_row = []
-            for col in range(start_col,end_col+1):
-                for elem in elems:
-                    if elem.x == row and elem.y == col:
-                        tmp_row.append(elem.value)
-            arr.append(tmp_row)
-        return arr
-
+        self.matrix = matrix
+            
     def get_size(self):
-        elems = self.matrix
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])+1
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])+1
-        return abs(start_row - end_row),abs(start_col - end_col)
+        return len(self.matrix),len(self.matrix[0])
 
-    def get_iterators(self):
-        elems = self.matrix
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])
-        return abs(start_row - end_row),abs(start_col - end_col)
-    
     def pprint(self):
-        elems = self.matrix
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])
-        arr = []
-        for row in range(start_row,end_row+1):
-            tmp_row = []
-            for col in range(start_col,end_col+1):
-                for elem in elems:
-                    if elem.x == row and elem.y == col:
-                        tmp_row.append(elem.value)
-            print(tmp_row)
+        for row in self.matrix:
+            print(row)
+                
         
     def to_array(self):
-        elems = self.matrix
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])
-        arr = []
-        for row in range(start_row,end_row+1):
-            tmp_row = []
-            for col in range(start_col,end_col+1):
-                for elem in elems:
-                    if elem.x == row and elem.y == col:
-                        tmp_row.append(elem.value)
-            arr.append(tmp_row)
-        return arr
-
+        return self.matrix
+        
     def get_elem(self,row,col):
-        return [elem.value for elem in self.matrix if elem.x == row and elem.y == col][0]
-    
-    def get_sub_matrix(self,start_row,end_row,start_col,end_col):
-        sub_matrix = [elem for elem in self.matrix if elem.x >= start_row  and elem.x <= end_row and elem.y >= start_col and elem.y <= end_col]
-        return Matrix(self.from_matrix_to_array(sub_matrix))
-
+        return self.matrix[row][col]    
+        
     def __add__(self,other):
-        other_elems = other.matrix
-        elems = self.matrix
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])
-        arr = []
-        for row in range(start_row,end_row+1):
-            tmp_row = []
-            for col in range(start_col,end_col+1):
-                first_val = [elem.value for elem in elems if elem.x == row and elem.y == col][0]
-                second_val = [elem.value for elem in other_elems if elem.x == row and elem.y == col][0]
-                tmp_row.append(first_val+second_val)
-            arr.append(tmp_row)
-        return Matrix(arr)
+        row_size,col_size = self.get_size()
+        new_matrix = []
+        for row in range(row_size):
+            new_matrix.append([elem+other.matrix[row][ind] for ind,elem in enumerate(self.matrix[row])])
+        return Matrix(new_matrix)
     
     def __sub__(self,other):
-        other_elems = other.matrix
-        elems = self.matrix
-        start_row = min([elem.x for elem in elems])
-        end_row = max([elem.x for elem in elems])
-        start_col = min([elem.y for elem in elems])
-        end_col = max([elem.y for elem in elems])
-        arr = []
-        for row in range(start_row,end_row+1):
-            tmp_row = []
-            for col in range(start_col,end_col+1):
-                first_val = [elem.value for elem in elems if elem.x == row and elem.y == col][0]
-                second_val = [elem.value for elem in other_elems if elem.x == row and elem.y == col][0]
-                tmp_row.append(first_val-second_val)
-            arr.append(tmp_row)
-        return Matrix(arr)
-
-def join_quadrants(A,B):
-    new_arr = []
-    for ind,val in enumerate(A):
-        new_arr.append(val+B[ind])
-    return new_arr
-    
-def multiply(X,Y):
-    if X.get_size() == (1,1) and Y.get_size() == (1,1):
-        return X.matrix[0].value * Y.matrix[0].value
-    if X.get_size() == (2,2) and Y.get_size() == (2,2):
-        return Matrix([
-            [X.get_elem(0,0)*Y.get_elem(0,0)+X.get_elem(0,1)*Y.get_elem(1,0), X.get_elem(0,0)*Y.get_elem(0,1)+X.get_elem(0,1)*Y.get_elem(1,1)],
-            [X.get_elem(1,0)*Y.get_elem(0,0)+X.get_elem(1,1)*Y.get_elem(1,0), X.get_elem(1,0)*Y.get_elem(0,1)+X.get_elem(1,1)*Y.get_elem(1,1)]
-        ])
-    else:
-        x_row_size,x_col_size = X.get_iterators()
-        x_row_mid,x_col_mid = x_row_size//2,x_col_size//2
-        y_row_size,y_col_size = Y.get_iterators()
-        y_row_mid,y_col_mid = y_row_size//2,y_col_size//2
-        #get_sub_matrix(start_row,end_row,start_col,end_col)
-        A = X.get_sub_matrix(0,x_row_mid,0,x_col_mid)
-        B = X.get_sub_matrix(0,x_row_mid,x_col_mid,x_col_size)
-        C = X.get_sub_matrix(x_row_mid,x_row_size,0,x_col_mid)
-        D = X.get_sub_matrix(x_row_mid,x_row_size,x_col_mid,x_col_size)
-        E = Y.get_sub_matrix(0,y_row_mid,0,y_col_mid)
-        F = Y.get_sub_matrix(0,y_row_mid,y_col_mid,y_col_size)
-        G = Y.get_sub_matrix(y_row_mid,y_row_size,0,y_col_mid)
-        H = Y.get_sub_matrix(y_row_mid,y_row_size,y_col_mid,y_col_size)
-        P_1 = multiply(A,F-H)
-        P_2 = multiply(A+B,H)
-        P_3 = multiply(C+D,E)
-        P_4 = multiply(D,G-E)
-        P_5 = multiply(A+D,E+H)
-        P_6 = multiply(B-D,G+H)
-        P_7 = multiply(A-C,E+F)
-        quad_1 = P_5 + P_4 - P_2 + P_6
-        quad_2 = P_1 + P_2
-        quad_3 = P_3 + P_4
-        quad_4 = P_1 + P_5 - P_3 - P_7
+        row_size,col_size = self.get_size()
         new_matrix = []
-        top = join_quadrants(quad_1.to_array(),quad_2.to_array())
-        bottom = join_quadrants(quad_3.to_array(),quad_4.to_array())
-        return Matrix(top+bottom)
-        
+        for row in range(row_size):
+            new_matrix.append([elem-other.matrix[row][ind] for ind,elem in enumerate(self.matrix[row])])
+        return Matrix(new_matrix)
 
+    def simple_multiplication(self,A,B):
+        row_size,col_size = self.get_size()
+        new_matrix = [[0 for i in range(row_size)] for j in range(row_size)]
+        for i in range(row_size):
+            for k in range(row_size):
+                for j in range(row_size):
+                    new_matrix[i][j] += A[i][k] * B[k][j]
+        return Matrix(new_matrix)
+    
+    def __mul__(self,other):
+        row_size,col_size = self.get_size()
+        if row_size <= 2:
+            return self.simple_multiplication(self.matrix,other.matrix)
+        else:
+            new_size = row_size//2
+            A = [[0 for j in range(new_size)] for i in range(new_size)]
+            B = [[0 for j in range(new_size)] for i in range(new_size)]
+            C = [[0 for j in range(new_size)] for i in range(new_size)]
+            D = [[0 for j in range(new_size)] for i in range(new_size)]
+
+            E = [[0 for j in range(new_size)] for i in range(new_size)]
+            F = [[0 for j in range(new_size)] for i in range(new_size)]
+            G = [[0 for j in range(new_size)] for i in range(new_size)]
+            H = [[0 for j in range(new_size)] for i in range(new_size)]
+
+            for i in range(new_size):
+                for j in range(new_size):
+                    A[i][j] = self.matrix[i][j]
+                    B[i][j] = self.matrix[i][j+new_size]
+                    C[i][j] = self.matrix[i + new_size][j]
+                    D[i][j] = self.matrix[i + new_size][j + new_size]
+
+                    E[i][j] = other.matrix[i][j]
+                    F[i][j] = other.matrix[i][j+new_size]
+                    G[i][j] = other.matrix[i + new_size][j]
+                    H[i][j] = other.matrix[i + new_size][j + new_size]
+
+            A = Matrix(A)
+            B = Matrix(B)
+            C = Matrix(C)
+            D = Matrix(D)
+            E = Matrix(E)
+            F = Matrix(F)
+            G = Matrix(G)
+            H = Matrix(H)
+            
+            p1 = A*(F-H)
+            p2 = (A+B)*H
+            p3 = (C+D)*E
+            p4 = D*(G-E)
+            p5 = (A+D)*(E+H)
+            p6 = (B-D)*(G+H)
+            p7 = (A -C)*(E+F)
+
+            c11 = p5 + p4 - p2 + p6
+            c12 = p1 + p2
+            c21 = p3 + p4
+            c22 = p1+ p5 - p3 - p7
+
+            final = [[0 for j in range(row_size)] for i in range(row_size)]
+            for i in range(new_size):
+                for j in range(new_size):
+                    final[i][j] = c11.matrix[i][j]
+                    final[i][j+new_size] = c12.matrix[i][j]
+                    final[i + new_size][j] = c21.matrix[i][j]
+                    final[i + new_size][j + new_size] = c22.matrix[i][j]
+            return Matrix(final)
+            
 A = Matrix([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])
 B = Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-#print(A.get_size())
-#print(B.get_size())
-multiply(A,B)
+(A*B).pprint()
