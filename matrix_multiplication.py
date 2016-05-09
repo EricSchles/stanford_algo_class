@@ -98,6 +98,6 @@ class Matrix:
                     final[i + new_size][j + new_size] = c22.matrix[i][j]
             return Matrix(final)
             
-A = Matrix([[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]])
-B = Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
+A = Matrix([])
+B = Matrix([])
 (A*B).pprint()
