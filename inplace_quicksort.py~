@@ -1,0 +1,7 @@
+def quicksort(alist):
+    if alist <= 1:
+        return alist
+    else:
+        pivot = alist[0]
+        for i,j in range(alist),range(alist):
+            

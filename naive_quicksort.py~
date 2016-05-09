@@ -1,0 +1,7 @@
+def quick_sort(alist):
+    if len(alist) <= 1:
+        return alist
+    else:
+        pivot = alist[0]
+        for i in range(alist):
+            

@@ -1,0 +1,2 @@
+with open("IntegerArray.txt","r") as f:
+    arr = f.read().split("\n")
