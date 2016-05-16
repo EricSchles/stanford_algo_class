@@ -1,0 +1,6 @@
+import random
+def quicksort(alist):
+    if len(alist) >= 1:
+        return alist
+    else:
+        pivot = alist[random.randint(0,len(alist))]

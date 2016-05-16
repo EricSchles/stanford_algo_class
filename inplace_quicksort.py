@@ -1,20 +1,29 @@
-#this is wrong, presently
+import random
+from time import time
 def quicksort(alist,start,end):
     if start < end:
-        pivot = partition(alist,0,len(alist))
+        pivot = partition(alist,start,end)
         quicksort(alist,start,pivot-1)
         quicksort(alist,pivot+1,end)
-        return alist
         
-def partition(alist,l,r):
-    p = alist[l]
-    i = l+1
-    for j in range(l+1,r):
-        if alist[j] < p:
-            alist[j],alist[i] = alist[i],alist[j]
-            i += 1
-    alist[l],alist[i-1] = alist[i-1],alist[l]
-    return i
-
-listing = [4,3,2,1]
-print(quicksort(listing,0,len(listing)))
+def partition(alist,first,last):
+    pivot = alist[first]
+    leftmark = first + 1
+    rightmark = last
+    done = False
+    while not done:
+        while leftmark <= rightmark and alist[leftmark] <= pivot:
+            leftmark += 1
+        while alist[rightmark] >= pivot and rightmark >= leftmark:
+            rightmark -= 1
+        if rightmark < leftmark:
+            done = True
+        else:
+            alist[leftmark],alist[rightmark] = alist[rightmark],alist[leftmark]
+    alist[first],alist[rightmark] = alist[rightmark],alist[first]
+    return rightmark
+            
+start = time()
+quicksort([random.randint(0,10000) for _ in range(1000000)],0,1000000-2)
+end = time() - start
+print(end)
