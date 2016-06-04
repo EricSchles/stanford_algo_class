@@ -1,0 +1,5 @@
+def r_select(alist):
+    if len(alist) <= 1:
+        return alist[0]
+    else:
+        

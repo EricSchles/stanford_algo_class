@@ -1,0 +1,16 @@
+import math
+from time import time
+def fastpower(a,b):
+    if b == 1:
+        return a
+    else:
+        c = a*a
+        answer = fastpower(a,math.floor(b/2))
+    if b %2 != 0:
+        return a*answer
+    else:
+        return answer
+
+    
+math.pow(475,5)
+fastpower(475,5)
