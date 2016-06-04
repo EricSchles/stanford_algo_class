@@ -33,7 +33,8 @@ def choice(removed_vertex,removed_edges,A,B):
     return A,B
         
 def random_contraction(g):
-    A,B = [],[]
+    A,B = Vertex(),Vertex()
+    A_ids,B_ids = [],[]
     while len(g.get_vertices()) > 2:
         print("num verticies",g.num_vertices)
         time.sleep(1)
